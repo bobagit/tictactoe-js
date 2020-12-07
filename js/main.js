@@ -5,12 +5,7 @@
 const gameBoard = (function() {
 
   // private
-  const tiles = [
-    null, null, null, null, null, null, null, null, null
-  ]
-
-  // render board 
-  // determine winner logic
+  const tiles = [null, null, null, null, null, null, null, null, null]
   const winningPattern = [
       [0, 1, 2],
       [3, 4, 5],
@@ -32,15 +27,12 @@ const gameBoard = (function() {
     }
   }
 
-  
   // public
   updateBoard = (position, pieceId) => {
     tiles[position] = pieceId
-    // render board
-    console.log(tiles)
+    // console.log(tiles)
     checkWinner(pieceId)
   }
-
 
   return {
     updateBoard
@@ -59,16 +51,12 @@ const Player = (name, pieceId) => {
   }
 }
 
-// #TODO send pieceId to module
-
 let player1 = Player("Bob", "x")
 let player2 = Player("CPU", "o")
-
-player1.play(0)
-player2.play(3)
-player1.play(1)
-player2.play(4)
-player1.play(2)
-
-// TODO create player factory function
+// 0   1   2
+// 3   4   5
+// 6   7   8
+player1.play(3) // winner
+player1.play(4) // winner
+player1.play(5) // winner
 
