@@ -1,5 +1,8 @@
+$border: 1px solid rgba(0, 0, 0, 1)
+$backgroundColor: rgb(235, 79, 69)	
+
 body
- background-color: rgba(89, 65, 129, 1)
+ background-color: $backgroundColor
  font-family: Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
 
 #wrap
@@ -12,7 +15,7 @@ body
     padding: 0
     background: url('../images/pregame-board.jpg') 0 0 no-repeat
     background-size: 100%
-    border: 10px solid rgba(255, 255, 255, 1)
+    border: $border
     ul
       width: 70%
       display: flex
@@ -39,10 +42,15 @@ body
       margin: 0
       width: 500px
   #board
-    /* display: flex is called in JS */
+    /* display: grid is called in JS */
+    grid-template-columns: repeat(3, 1fr)
+    gap: 10px
+    grid-auto-rows: 160px
     width: 500px
     height: 500px
-    background-color: red
+    background-color: $backgroundColor
     margin: 0 auto
     padding: 0
-    border: 10px solid rgba(255, 255, 255, 1)
+    border: $border
+    .board-tile
+      background-color: rgba(255, 255, 255, 0.20)

@@ -1,5 +1,5 @@
 body {
-  background-color: #594181;
+  background-color: #eb4f45;
   font-family: Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
@@ -15,7 +15,7 @@ body {
   padding: 0;
   background: url("../images/pregame-board.jpg") 0 0 no-repeat;
   background-size: 100%;
-  border: 10px solid white;
+  border: 1px solid black;
 }
 
 #wrap #start-menu ul {
@@ -59,12 +59,20 @@ body {
 }
 
 #wrap #board {
-  /* display: flex is called in JS */
+  /* display: grid is called in JS */
+  -ms-grid-columns: (1fr)[3];
+      grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  grid-auto-rows: 160px;
   width: 500px;
   height: 500px;
-  background-color: red;
+  background-color: #eb4f45;
   margin: 0 auto;
   padding: 0;
-  border: 10px solid white;
+  border: 1px solid black;
+}
+
+#wrap #board .board-tile {
+  background-color: rgba(255, 255, 255, 0.2);
 }
 /*# sourceMappingURL=style.css.map */
