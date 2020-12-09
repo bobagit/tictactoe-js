@@ -1,5 +1,5 @@
-$border: 1px solid rgba(0, 0, 0, 1)
-$backgroundColor: rgb(235, 79, 69)	
+$border: 10px solid rgba(255, 255, 255, 0.25)
+$backgroundColor: rgb(0, 0, 0)	
 
 body
  background-color: $backgroundColor
@@ -52,10 +52,38 @@ body
     margin: 0 auto
     padding: 0
     border: $border
+    border-radius: 20px
+    padding: 10px
     .board-tile
       display: flex;
       justify-content: center;
       align-items: center;
       background-color: rgba(255, 255, 255, 0.20)
-      font-size: 4rem
+      font-size: 6rem
+      color: #fff
+  #player-display
+    width: 500px
+    padding: 0
+    margin: 0 auto
+    ul
+      width: 100%
+      display: flex
+      flex-direction: row
+      justify-content: space-between
+      list-style: none
+      margin: 3rem auto
+      padding: 0
+      li
+        border: 5px solid rgba(11, 144, 209, 1)
+        background-color: #000
+        text-transform: uppercase
+        box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.4)
+        border-radius: 30px
+        display: block
+        color: #ffffff
+        text-decoration: none
+        padding: 1rem 1.5rem
+        &.highlight
+          background-color: rgba(11, 144, 209, .5)
+          
 

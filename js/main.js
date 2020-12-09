@@ -27,14 +27,26 @@ const gameBoard = (function() {
     [0, 4, 8], [2, 4, 6]
   ];
   
+  let moves = 0;
+
+  const addMove = () => {
+    moves += 1;
+  }
+
   checkWinner = (pieceId) => { 
     for (let i = 0; i < winningPattern.length; i++) {
       if (tiles[winningPattern[i][0]] == pieceId && 
         tiles[winningPattern[i][1]] == pieceId && 
         tiles[winningPattern[i][2]] == pieceId) {
           console.log(`${pieceId.toUpperCase()} wins.`)
+          // #TODO: run reset, end game
       }   
+    } 
+    if (moves == 9) {
+      console.log("DRAW")
+      // #TODO: opacity gameboard 50%, div to ask to play again?
     }
+    
   }
 
   // Public
@@ -48,15 +60,21 @@ const gameBoard = (function() {
   }
 
   return {
-    updateBoard
+    updateBoard,
+    addMove
   }
 })();
 
 const displayController = (function() {
   const startMenu = document.getElementById('start-menu');
   const board = document.getElementById('board');
-  // Hide board for start menu
+  const playerDisplay = document.getElementById('player-display');
+  let playerOneHighlight = document.querySelector('.player-one')
+  let playerTwoHighlight = document.querySelector('.player-two')
+  
+  // Hide game board elements for start menu
   board.style.display = 'none'
+  playerDisplay.style.display = 'none'
 
   // Select number of players
   startMenu.addEventListener('click', e => {
@@ -73,19 +91,20 @@ const displayController = (function() {
       initiateBoard()
     }
 
-    // #TODO
-    // setup setter for player turn to keep track of when player plays 
-    // setTurn? setter and getter?
     let playerTurn = 1;
 
     board.addEventListener('click', e => {
+      
       e.preventDefault()
       let tileId = e.target.getAttribute('data-id')
-      // match up the div data-id with the gameBoard.tile array
       if (playerTurn == 1) {
-      player1.play(tileId)
-      playerTurn += 1;
+        playerOneHighlight.classList.toggle('highlight')
+        playerTwoHighlight.classList.toggle('highlight')
+        player1.play(tileId)
+        playerTurn += 1;
       } else {
+        playerOneHighlight.classList.toggle('highlight')
+        playerTwoHighlight.classList.toggle('highlight')
         player2.play(tileId)
         playerTurn -= 1;
       }
@@ -95,6 +114,7 @@ const displayController = (function() {
 
   function initiateBoard(players) {
     board.style.display = 'grid'
+    playerDisplay.style.display = 'flex'
     for (let i = 0; i < 9; i++) { // nine tiles
       let tile = document.createElement('div')
       tile.classList.add('board-tile');
@@ -108,8 +128,12 @@ const displayController = (function() {
 
 // Factory function
 const Player = (name, pieceId) => {
+  
   const play = (position) => {
-    gameBoard.updateBoard(position, pieceId)  
+    // update number of moves
+    gameBoard.addMove() 
+    gameBoard.updateBoard(position, pieceId) 
+    
   }
   return {
     play,
@@ -120,11 +144,3 @@ const Player = (name, pieceId) => {
 
 let player1 = Player("Bob", "x")
 let player2 = Player("CPU", "o")
-
-// 0   1   2
-// 3   4   5
-// 6   7   8
-//player1.play(0) // winner
-//player1.play(1) // winner
-//player1.play(2) // winner
-
