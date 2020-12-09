@@ -43,7 +43,7 @@ const gameBoard = (function() {
     tiles[position] = pieceId
     // update screen
     let screenPosition = document.getElementById(position)
-    screenPosition.innerText = pieceId
+    screenPosition.innerText = pieceId.toUpperCase()
     checkWinner(pieceId)
   }
 
@@ -76,12 +76,19 @@ const displayController = (function() {
     // #TODO
     // setup setter for player turn to keep track of when player plays 
     // setTurn? setter and getter?
+    let playerTurn = 1;
 
     board.addEventListener('click', e => {
       e.preventDefault()
       let tileId = e.target.getAttribute('data-id')
       // match up the div data-id with the gameBoard.tile array
+      if (playerTurn == 1) {
       player1.play(tileId)
+      playerTurn += 1;
+      } else {
+        player2.play(tileId)
+        playerTurn -= 1;
+      }
     })
 
   })
