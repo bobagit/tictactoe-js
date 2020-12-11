@@ -89,7 +89,7 @@ const gameBoard = (function() {
   }
 
 
-   
+  
   let moves = 0;
   const moveCounter = () => {
     moves += 1;
@@ -170,8 +170,8 @@ const gameBoard = (function() {
 
         if (gameResult.pieceId == "x") {
           console.log("X won.")
-          DOM.highlightWinningTiles(gameResult)
           DOM.removeCurrentPlayerHighlight()
+          DOM.highlightWinningTiles(gameResult)
           wins.x += 1
           DOM.scoreX.innerText = wins.x
           // reset board
@@ -179,8 +179,8 @@ const gameBoard = (function() {
 
         } else if (gameResult.pieceId == "o") {
           console.log("O won.") 
-          DOM.highlightWinningTiles(gameResult)
           DOM.removeCurrentPlayerHighlight()
+          DOM.highlightWinningTiles(gameResult)
           wins.o += 1
           DOM.scoreO.innerText = wins.o
           // reset board
