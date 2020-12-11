@@ -6,8 +6,27 @@ const DOM = (function() {
   const playerOneHighlight = document.querySelector('.player-one');
   const playerTwoHighlight = document.querySelector('.player-two');
   const scoreboard = document.getElementById('scoreboard')
-  const xScore = document.querySelector('.x')
-  const oScore = document.querySelector('.o')
+  const scoreX = document.querySelector('.x')
+  const scoreO = document.querySelector('.o')
+  const scoreDraw = document.querySelector('.draw')
+  const askUserPlayAgain = document.getElementById('play-again')
+
+  let removeCurrentPlayerHighlight = () => {
+    DOM.playerOneHighlight.classList.remove('highlight')
+    DOM.playerTwoHighlight.classList.remove('highlight')
+  }
+
+  let toggleCurrentPlayerHighlight = () => {
+    DOM.playerOneHighlight.classList.toggle('highlight')
+    DOM.playerTwoHighlight.classList.toggle('highlight')
+  }
+
+  let highlightWinningTiles = (gameResult) => {
+    for (let i = 0; i < gameResult.winningCombo.length; i++) {
+      let highlight = document.getElementById(gameResult.winningCombo[i])
+      highlight.style.backgroundColor = 'rgba(11, 144, 209, 0.5)';
+    }
+  }
 
   return {
     startMenu,
@@ -16,10 +35,36 @@ const DOM = (function() {
     playerOneHighlight,
     playerTwoHighlight,
     scoreboard,
-    xScore,
-    oScore
+    scoreX,
+    scoreO,
+    scoreDraw,
+    askUserPlayAgain,
+    removeCurrentPlayerHighlight,
+    toggleCurrentPlayerHighlight,
+    highlightWinningTiles
   }
 })();
+
+// Play a round
+const playGame = () => {
+  let playerTurn = 1;
+  DOM.board.addEventListener('click', e => {
+    e.preventDefault()
+    let tileId = e.target.getAttribute('data-id')
+    let tileSelected = e.target.textContent
+    if (tileSelected == '') { 
+      if (playerTurn == 1) {
+        DOM.toggleCurrentPlayerHighlight()
+        player1.play(tileId)
+        playerTurn += 1;
+      } else {
+        DOM.toggleCurrentPlayerHighlight()
+        player2.play(tileId)
+        playerTurn -= 1;
+      }
+    }
+  })
+}
 
 const gameBoard = (function() {
   const tiles = [null, null, null, null, null, null, null, null, null];
@@ -28,13 +73,6 @@ const gameBoard = (function() {
     [0, 3, 6], [1, 4, 7], [2, 5, 8],
     [0, 4, 8], [2, 4, 6]
   ];
-  
-  // QUESTION: Move counter is to determine draw, but this 
-  // piece of code feels like it could be improved.
-  let moves = 0;
-  const moveCounter = () => {
-    moves += 1;
-  }
 
   let wins = {
     x: 0,
@@ -42,47 +80,107 @@ const gameBoard = (function() {
     draw: 0
   }
 
+  let moves = 0;
+  const moveCounter = () => {
+    moves += 1;
+  }
+
   checkWinner = (pieceId) => { // Returns winning piece ('x' or 'o'), or "draw"
     for (let i = 0; i < winningPattern.length; i++) {
       if (tiles[winningPattern[i][0]] == pieceId && 
         tiles[winningPattern[i][1]] == pieceId && 
         tiles[winningPattern[i][2]] == pieceId) {
-          return pieceId
+        
+        // grab winning combo to return + highlight squares
+        let winningCombo = [
+          winningPattern[i][0],
+          winningPattern[i][1],
+          winningPattern[i][2]
+        ]
+
+        let returnVal = {
+           winningCombo,
+           pieceId
+          }
+          return returnVal
       }   
     } 
     if (moves == 9) {
-      return "draw"
+      let returnVal = {
+        winningCombo: 'draw',
+        pieceId: 'draw'
+      }
+      return returnVal
     }
+    return false
   }
 
-  // Public
-  updateBoard = (position, pieceId) => {
-    // update array
-    tiles[position] = pieceId
-    // update screen
-    let screenPosition = document.getElementById(position)
-    screenPosition.innerText = pieceId.toUpperCase()
-    let gameResult = checkWinner(pieceId)
-    if (gameResult == "x") {
-      console.log("X won.")
-      wins.x += 1
-      DOM.xScore.innerText = gameBoard.wins.x
-      
-    } else if (gameResult == "o") {
-      console.log("O won.") 
-      wins.o += 1
-      DOM.oScore.innerText = gameBoard.wins.o
+  resetBoard = () => {
+    // blur board
+    DOM.board.style.filter = 'blur(10px)';
 
-    } else if (gameResult == "draw") {
-      console.log("Draw")
-      wins.draw += 1
-    }
+    // ask if they want to play again
+    DOM.askUserPlayAgain.style.display = 'flex'
+    // if yes, clear board and clear moves counter
+    
+    
+
+    for (let i = 0; i < 9; i++) { // nine tiles
+      let tile = document.getElementById(i)
+      tile.textContent = ''
+  } 
+  
+  // then play again
+} 
+      
+    
+  
+  // Public
+  playMove = (position, pieceId) => {
+    if (tiles[position] != null) {
+      return false
+    } else if (tiles[position] == null) {
+        gameBoard.moveCounter() 
+        // update array
+        tiles[position] = pieceId
+        // update screen
+        let screenPosition = document.getElementById(position)
+        screenPosition.innerText = pieceId.toUpperCase()
+
+        let gameResult = checkWinner(pieceId) // gameResult is object that has winningCombo and piece 
+
+        if (gameResult.pieceId == "x") {
+          console.log("X won.")
+          DOM.highlightWinningTiles(gameResult)
+          DOM.removeCurrentPlayerHighlight()
+          wins.x += 1
+          DOM.scoreX.innerText = wins.x
+          // reset board
+          resetBoard()
+
+        } else if (gameResult.pieceId == "o") {
+          console.log("O won.") 
+          DOM.highlightWinningTiles(gameResult)
+          DOM.removeCurrentPlayerHighlight()
+          wins.o += 1
+          DOM.scoreO.innerText = wins.o
+          // reset board
+          resetBoard()
+
+        } else if (gameResult.pieceId == "draw") {
+          console.log("Draw")
+          DOM.removeCurrentPlayerHighlight()
+          wins.draw += 1
+          DOM.scoreDraw.innerText = wins.draw
+          // reset board
+          resetBoard()
+        }
+     }
   }
 
   return {
-    updateBoard,
-    moveCounter,
-    wins
+    playMove,
+    moveCounter
   }
 })();
 
@@ -91,20 +189,21 @@ const displayController = (function() {
   DOM.board.style.display = 'none'
   DOM.playerDisplay.style.display = 'none'
   DOM.scoreboard.style.display = 'none'
+  DOM.askUserPlayAgain.style.display = 'none'
 
   // Select number of players
   DOM.startMenu.addEventListener('click', e => {
     if (e.target.classList.contains('one-player')) {
       DOM.startMenu.style.display = 'none'
-      initiateBoard()
+      renderBoard()
       // #TODO add CPU here
 
     } else if (e.target.classList.contains('two-players')) {
       DOM.startMenu.style.display = 'none'
-      initiateBoard()
+      renderBoard()
     }
 
-    function initiateBoard() {
+    function renderBoard() {
       DOM.board.style.display = 'grid'
       DOM.playerDisplay.style.display = 'flex'
       DOM.scoreboard.style.display = 'flex'
@@ -116,43 +215,17 @@ const displayController = (function() {
         board.appendChild(tile);
       }
     } 
-
-    // Toggle logic
-    let playerTurn = 1;
-    DOM.board.addEventListener('click', e => {
-      e.preventDefault()
-      let tileId = e.target.getAttribute('data-id')
-      if (playerTurn == 1) {
-        DOM.playerOneHighlight.classList.toggle('highlight')
-        DOM.playerTwoHighlight.classList.toggle('highlight')
-        player1.play(tileId)
-        playerTurn += 1;
-      } else {
-        DOM.playerOneHighlight.classList.toggle('highlight')
-        DOM.playerTwoHighlight.classList.toggle('highlight')
-        player2.play(tileId)
-        playerTurn -= 1;
-      }
-    })
-
   })
 
-  function resetBoard() {
-    for (let i = 0; i < 9; i++) {
-      tiles[i] = null;
-      let tile = document.getElementById(i)
-      tile.remove()
-    }
-  }
+  playGame()
 
 })();
 
-// Factory function
+// Factory function to create players
 const Player = (name, pieceId) => {
   const play = (position) => {
     // update number of moves
-    gameBoard.moveCounter() 
-    gameBoard.updateBoard(position, pieceId)  
+    gameBoard.playMove(position, pieceId)  
   }
   return {
     play,

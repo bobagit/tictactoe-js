@@ -71,10 +71,9 @@ body
       flex-direction: row
       justify-content: space-between
       list-style: none
-      margin: 3rem auto
+      margin: 3rem auto 0
       padding: 0
       li
-        border: 5px solid rgba(11, 144, 209, 1)
         background-color: #000
         text-transform: uppercase
         box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.4)
@@ -85,9 +84,10 @@ body
         padding: 1rem 1.5rem
         &.highlight
           background-color: rgba(11, 144, 209, .5)
+          border: 5px solid rgba(11, 144, 209, 1)
   #scoreboard
     width: 300px
-    margin: 2rem auto
+    margin: 2rem auto 0
     align-items: center
     color: #fff
     /* display: flex set by JavaScript*/
@@ -96,6 +96,28 @@ body
       ul
         display: flex
         flex-direction: row
+        justify-content: space-around
+        width: 500px
+        margin: 0 auto
+        padding: 0
         list-style: none
+        font-size: 2rem
+        li
+          &.score
+            font-size: 1rem
+            padding-top: 0.6rem
+        &.titles
+          font-size: 1rem
+          text-transform: uppercase
+          padding-bottom: 1rem
+  #play-again
+    z-index: 2
+    width: 400px
+    margin: 0 auto
+    color: white
+    border: $border
+    position: relative
+    bottom: 30rem
+
           
 
