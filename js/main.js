@@ -67,7 +67,7 @@ const playGame = () => {
 }
 
 const gameBoard = (function() {
-  const tiles = [null, null, null, null, null, null, null, null, null];
+  let tiles = [null, null, null, null, null, null, null, null, null];
   const winningPattern = [
     [0, 1, 2], [3, 4, 5], [6, 7, 8],
     [0, 3, 6], [1, 4, 7], [2, 5, 8],
@@ -80,6 +80,8 @@ const gameBoard = (function() {
     draw: 0
   }
 
+
+   
   let moves = 0;
   const moveCounter = () => {
     moves += 1;
@@ -117,24 +119,33 @@ const gameBoard = (function() {
 
   resetBoard = () => {
     // blur board
-    DOM.board.style.filter = 'blur(10px)';
+    DOM.board.style.filter = 'blur(5px)';
 
     // ask if they want to play again
     DOM.askUserPlayAgain.style.display = 'flex'
-    // if yes, clear board and clear moves counter
-    
-    
-
-    for (let i = 0; i < 9; i++) { // nine tiles
-      let tile = document.getElementById(i)
-      tile.textContent = ''
-  } 
-  
-  // then play again
+    DOM.askUserPlayAgain.addEventListener('click', e => {
+      if (e.target.classList.contains('yes')) {
+        // clear tiles
+        for (let i = 0; i < 9; i++) { // nine tiles
+          let tile = document.getElementById(i)
+          tile.textContent = ''
+          tiles[i] = null
+          console.log(tile)
+          console.log(tiles)
+          tile.style.backgroundColor = 'rgba(255, 255, 255, 0.25)';         
+        } 
+        DOM.board.style.filter = 'none';
+        DOM.askUserPlayAgain.style.display = 'none'
+        moves = 0;
+        playGame();
+      } 
+      if (e.target.classList.contains('.no')) {
+        console.log("Game over")
+        // TODO put game over screen
+      }
+    })
 } 
       
-    
-  
   // Public
   playMove = (position, pieceId) => {
     if (tiles[position] != null) {
