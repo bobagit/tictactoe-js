@@ -16,9 +16,17 @@ const DOM = (function() {
     DOM.playerTwoHighlight.classList.remove('highlight')
   }
 
-  let toggleCurrentPlayerHighlight = () => {
-    DOM.playerOneHighlight.classList.toggle('highlight')
-    DOM.playerTwoHighlight.classList.toggle('highlight')
+  let toggleCurrentPlayerHighlight = (player) => {
+    if (player == 2) {
+      DOM.playerOneHighlight.classList.remove('highlight')
+      DOM.playerTwoHighlight.classList.remove('highlight')
+      DOM.playerOneHighlight.classList.add('highlight')
+    } else if (player == 1) {
+      DOM.playerOneHighlight.classList.remove('highlight')
+      DOM.playerTwoHighlight.classList.remove('highlight')
+      DOM.playerTwoHighlight.classList.add('highlight')
+    }
+    
   }
 
   let highlightWinningTiles = (gameResult) => {
@@ -54,12 +62,12 @@ const playGame = () => {
     let tileSelected = e.target.textContent
     if (tileSelected == '') { 
       if (playerTurn == 1) {
-        DOM.toggleCurrentPlayerHighlight()
         player1.play(tileId)
+        DOM.toggleCurrentPlayerHighlight(1)
         playerTurn += 1;
       } else {
-        DOM.toggleCurrentPlayerHighlight()
         player2.play(tileId)
+        DOM.toggleCurrentPlayerHighlight(2)
         playerTurn -= 1;
       }
     }
